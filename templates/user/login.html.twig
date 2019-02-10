@@ -1,0 +1,67 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Connexion{% endblock %}
+
+{% block body %}
+<div class="col-12 col-md-5 mx-auto my-4">
+<h1>Connectez-vous</h1>
+
+    {# Messages flash #}
+    {% for message in app.flashes('notice') %}
+        <div class="alert alert-success flash-message mb-2">
+            {{ message }}
+        </div>
+    {% endfor %}
+    {% for message in app.flashes('danger') %}
+        <div class="alert alert-danger flash-message mb-2">
+            {{ message }}
+        </div>
+    {% endfor %}
+    {% if error %}
+    <div class="alert alert-danger flash-message mb-2">
+        {{ error.messageKey|trans(error.messageData, 'security') }}
+    </div>
+    {% endif %}
+
+    <form action="{{ path('login') }}" method="post">
+        <div class="form-group">
+            <label for="email">Email</label>
+            <input 
+                type="text" 
+                class="form-control" 
+                id="email" 
+                placeholder="Entrez votre adresse email"
+                name="_username"
+                value="{{ last_username }}"
+            >
+        </div>
+        <div class="form-group">
+            <label for="password">Mot de passe</label>
+            <input 
+                type="password" 
+                class="form-control" 
+                id="password" 
+                placeholder="Entrez votre mot de passe"
+                name="_password" 
+            >
+        </div>
+        <button type="submit" class="btn btn-secondary">Se connecter</button>
+        <p class="mt-2"><small><a href="{{path('pass_forgotten')}}">Mot de passe oublié ?</a></small></p>
+    </form>
+     <p><a href="{{path('home')}}" class="btn btn-dark mt-2"><i class="fas fa-arrow-circle-left"></i> Retour</a></p>
+</div>
+
+{% endblock %}
+
+{% block footer %}
+
+    <footer>
+        <nav class="navbar fixed-bottom navbar-light bg-light justify-content-center">
+            <form class="form-inline">
+                <a href="{{path('legal_mentions')}}"><button class="btn btn-sm btn-outline-secondary footer-button" type="button">Mentions légales</button></a>
+                <a href="{{path('contact_us')}}"><button class="btn btn-sm btn-outline-secondary footer-button" type="button">Nous contacter</button></a>
+            </form>
+        </nav>
+    </footer>
+
+{% endblock %}

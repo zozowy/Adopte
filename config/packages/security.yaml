@@ -1,0 +1,65 @@
+security:
+    # https://symfony.com/doc/current/security.html#where-do-users-come-from-user-providers
+    encoders: 
+        App\Entity\User:
+            algorithm: bcrypt
+    
+    providers:
+        db_adopte_un_alternant:
+            entity:
+                class: App\Entity\User
+                property: email
+    
+    firewalls:
+        dev:
+            pattern: ^/(_(profiler|wdt)|css|images|js)/
+            security: false
+        main:
+            user_checker: App\Security\UserChecker 
+            provider: db_adopte_un_alternant
+            anonymous: true
+            form_login: 
+                login_path: login
+                success_handler: redirect.after.login 
+                check_path: login
+            logout:
+                path: logout
+                target: home
+
+            # activate different ways to authenticate
+
+            # http_basic: true
+            # https://symfony.com/doc/current/security.html#a-configuring-how-your-users-will-authenticate
+
+            # form_login: true
+            # https://symfony.com/doc/current/security/form_login_setup.html
+
+    # Easy way to control access for large sections of your site
+    # Note: Only the *first* access control that matches will be used
+    access_control:
+        # Rôle candidat : 
+        - { path: '^/candidat/profil', roles: ROLE_CANDIDATE }
+        - { path: '^/candidat/information-personnelle', roles: ROLE_CANDIDATE }
+        # pattern : /candidat/themesanstiret/action
+        - { path: '^/candidat/[a-z]+/[a-z]+', roles: ROLE_CANDIDATE }
+        # pattern : /candidat/themeavec-untiret/action
+        - { path: '^/candidat/^([a-z]+)-([a-z]+)$/[a-z]+', roles: ROLE_CANDIDATE }
+        # pattern : /candidat/themeavec-deux-tiret/action
+        - { path: '^/candidat/^([a-z]+)-([a-z]+)-([a-z]+)$/[a-z]+', roles: ROLE_CANDIDATE }
+        # pattern : /candidat/themesanstiret/id/action
+        - { path: '^/candidat/[a-z]+/[0-9]+/[a-z]+', roles: ROLE_CANDIDATE }
+        # pattern : /candidat/themeavec-untiret/id/action
+        - { path: '^/candidat/^([a-z]+)-([a-z]+)$/[0-9]+/[a-z]+', roles: ROLE_CANDIDATE }
+        # pattern : /candidat/themeavec-deux-tiret/id/action
+        - { path: '^/candidat/^([a-z]+)-([a-z]+)-([a-z]+)$/[0-9]+/[a-z]+', roles: ROLE_CANDIDATE }
+        # Rôle recruteur :
+        - { path: '^/recruteur/profil', roles: ROLE_RECRUITER }
+        - { path: '^/recruteur/information-personnelle', roles: ROLE_RECRUITER }
+        - { path: '^/recruteur/information-entreprise', roles: ROLE_RECRUITER }
+        # pattern : /recruteur/themesanstiret/action
+        - { path: '^/recruteur/[a-z]+/[a-z]+', roles: ROLE_RECRUITER }
+        # pattern : /recruteur/themesanstiret/id/action
+        - { path: '^/recruteur/[a-z]+/[0-9]+/[a-z]+', roles: ROLE_RECRUITER }
+        # Role candidat ET recruteur 
+        - { path: '^/candidat/[0-9]+/[a-z]+', roles: [ROLE_RECRUITER, ROLE_CANDIDATE] }
+        - { path: '^/message/[a-z]+', roles: [ROLE_RECRUITER, ROLE_CANDIDATE] }

@@ -1,0 +1,31 @@
+{% extends 'base.html.twig' %}
+
+{% block title %} {{ tab_type }} un site {% endblock %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('css/autocomplete.css') }}">
+{% endblock %}
+{% block body %}
+<div class="col-10 col-md-7 mx-auto my-4">
+   <p><a href="{{path('candidate_profile')}}" class="btn btn-dark"><i class="fas fa-arrow-circle-left"></i> Retour</a></p>
+
+<h1>{{ tab_type }} un site web</h1>
+
+{# Formulaire #}
+{{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
+    {{ form_widget(form) }}
+    <button type="submit" class="btn btn-secondary mb-2">Valider</button>
+    </button>
+</div>
+{% endblock %}
+
+{% block footer %}
+    <footer>
+        <nav class="navbar fixed-bottom navbar-light bg-light justify-content-center">
+            <form class="form-inline">
+                <a href="{{path('legal_mentions')}}"><button class="btn btn-sm btn-outline-secondary footer-button" type="button">Mentions légales</button></a>
+                <a href="{{path('contact_us')}}"><button class="btn btn-sm btn-outline-secondary footer-button" type="button">Nous contacter</button></a>
+            </form>
+        </nav>
+    </footer>
+{% endblock %}

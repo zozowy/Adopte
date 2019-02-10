@@ -1,0 +1,179 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Je suis une entreprise{% endblock %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('css/candidateList.css') }}">
+{% endblock %}
+
+{% block body %}
+
+<div class="col-12">
+    <p class="ml-3 ml-md-5">
+        <a href="{{ app.request.headers.get('referer') }}" class="btn btn-dark mt-2 ml-4">
+            <i class="fas fa-arrow-circle-left"></i> 
+            Retour
+        </a>
+    </p>
+
+    <div class="row col-12 col-md-11 mx-auto">
+
+    {# Messages flash #}
+    {% for message in app.flashes('notice') %}
+        <div class="alert alert-success flash-message mb-2">
+            {{ message }}
+        </div>
+    {% endfor %}
+    {% for message in app.flashes('danger') %}
+        <div class="alert alert-danger flash-message mb-2">
+            {{ message }}
+        </div>
+    {% endfor %}   
+    {% for message in app.flashes('warning') %}
+        <div class="alert alert-danger flash-message mb-2">
+            {{ message }}
+        </div>
+    {% endfor %}   
+
+    <div class="row col-12 mx-auto p-lg-0 d-flex justify-content-between"> {# Accordéon + aside #}
+        <div class="accordion col-12 col-lg-8 p-0" id="accordionExample"> {# Accordéon #}
+            
+            <div class="card mb-4"> {# Carte 1 #}
+                
+                <div>
+                    <button class="btn btn-light card-header col-12" id="headingOne" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                        Ils recherchent une alternance
+                    </button>
+                </div>
+                    
+                <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordionExample">
+                    <div class="card-body">
+
+                    {% if visitCards is empty %}
+                        <p class="text-center"> Aucun candidat ne correspond à votre recherche </p>
+                    {% endif %}
+
+                    {% for visitCard in visitCards %}
+                        <div class="border-bottom border-secondaryt mb-4">
+                            <div class="text-center">
+                                <p> <h5><span class="badge badge-dark p-2">
+                                    {% if visitCard.visibilityChoice == 0 %}
+                                        {{ visitCard.isCandidate.user.firstname }} {{ visitCard.isCandidate.user.lastname }}
+                                    {% elseif visitCard.visibilityChoice == 2 %}
+                                        {{ visitCard.isCandidate.user.firstname }}
+                                    {% else %}
+                                        {{ visitCard.isCandidate.user.lastname }}
+                                    {% endif %}
+                                    </span></h5>
+                                </p>
+                                <img 
+                                    src="{{ asset('uploads/images/'~ (visitCard.isCandidate.picture ?: 'default-candidate.png')) }}" 
+                                    style="width: 80px;height:80px;"
+                                    class="mb-2"
+                                />
+                                <p><h5>
+                                {% if visitCard.adopted == 1 %}
+                                    <span class="badge badge-pill badge-success"> Adopté </span>
+                                {% else %}
+                                    <div class="badge badge-pill badge-warning"> En recherche </div>
+                                {% endif %}
+                                </p></h5>
+                            </div>
+                            <p> <div class="text-profile">
+                                {{ visitCard.about }}
+                                </div>
+                                {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+                                    <a class="btn btn-outline-primary btn-sm" href="{{path('candidates_one', {'id': visitCard.isCandidate.user.id })}}" role="button">Voir son profil complet <i class="fas fa-external-link-alt"></i></a>
+                                {% else %}
+                                    <a class="btn btn-outline-primary btn-sm" href="{{path('login')}}" role="button">Connectez-vous pour voir son profil complet <i class="fas fa-external-link-alt"></i></a>
+                                {% endif %}
+                           </p>
+                        </div>
+                    {% endfor %}
+                    </div>
+                </div>
+            </div> {# Fin carte 1 #}
+
+            <div class="card mb-4"> {# Carte 2 #}
+                
+                <div>
+                    <button class="btn btn-light collapsed card-header col-12" id="headingTwo" type="button" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                        En savoir plus sur l'alternance
+                    </button>
+                </div>
+
+                <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionExample">
+                    <div class="card-body">
+                        <ul style="list-style-type: none;" class="col-12">
+                        {% for article in articles %}
+
+                            {% if article.isStory == 0 %}
+                                <li class="text-center my-3 border-bottom pb-2">
+                                    <a href="{{path('editorial')}}#{{article.slug}}" class="text-dark">
+                                        {{article.title}}
+                                    </a>
+                                </li>
+                            {% endif %}
+                        
+                        {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            </div> {# Fin carte 2 #}
+
+            <div class="card mb-4"> {# Carte 3 #}
+                
+                <div>
+                    <button class="btn btn-light card-header col-12 collapsed" id="headingThree" type="button" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                        Ils témoignent...
+                    </button>
+                </div>
+
+                <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordionExample">
+                    <div class="card-body">
+                        <ul style="list-style-type: none;" class="col-12">
+                            {% for article in articles %}
+            
+                                {% if article.isStory == 1 %}
+                                    <li class="text-center my-3  border-bottom pb-2" >
+                                        <a href="{{path('editorial')}}#{{article.slug}}" class="text-dark">
+                                            {{article.title}}
+                                        </a>
+                                    </li>
+                                {% endif %}
+                            
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            </div> {# Fin carte 3 #}
+
+
+            <a href="{{path('signup')}}"  class="btn btn-secondary col-9 col-lg-3 mx-auto d-block " role="button" aria-disabled="true">
+                Inscrivez-vous
+            </a>
+
+        </div> {# Fin Accordéon #}
+    
+        <div class="col-3 d-none d-lg-block p-0 aside"> {# Aside #}
+            <aside class="aside-absolute"> {# Aside #}
+                <p class="h6 bg-light rounded p-2 border-bottom text-center">
+                    Filtrer les recherches
+                </p>
+                {{ include('candidate/_searchform.html.twig') }}
+            </aside>
+        </div>
+
+    </div>{# Fin accordéon + aside #}
+    
+</div>
+
+
+
+{% endblock %}
+
+{% block javascripts %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="{{ asset('js/candidateList.js') }}"></script>
+    
+{% endblock %}

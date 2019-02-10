@@ -1,0 +1,13 @@
+.message {
+    height: 425px;
+    overflow-y: scroll; 
+}
+
+/* permet de couper les mot trop long en faisant un retour à la ligne */
+.message p {
+    overflow-wrap: break-word;
+}
+
+.form {
+    height: 55px;
+}

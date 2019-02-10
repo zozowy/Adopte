@@ -1,0 +1,23 @@
+/****** Aside de la page éditoriale *********/
+
+/* Définir une taille fixe à la div entourant le aside 
+permet d'éviter que le footer passe au dessus */
+.aside {
+    height: 675px;
+    font-size: 0.8rem;
+}
+
+.aside-absolute {
+    position: absolute;
+    top: 0; 
+}
+
+.aside-fixed {
+    position: fixed;
+    top: 0;
+}
+
+.aside-size {
+    height: 150px;
+    overflow-y: scroll;
+}
