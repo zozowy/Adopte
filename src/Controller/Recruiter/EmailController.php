@@ -104,9 +104,7 @@ class EmailController extends AbstractController
             $this->addFlash('danger', 'Une erreur est survenue.');
             return $this->redirectToRoute('candidates_list');
 
-        }
-
-       
+        }      
 
         return $this->render('recruiter/profile/email.html.twig', [
             'form' => $form->createView(),

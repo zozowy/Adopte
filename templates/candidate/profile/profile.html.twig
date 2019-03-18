@@ -8,14 +8,15 @@
 {% endblock stylesheets %}
 
 {% block body %}
-<div class="container col-12" data-url="{{ app.request.server.get('HTTP_HOST') }}"> {# HTTP_HOST <- Local #}
+<div class="container col-12" data-url="{{ app.request.server.get('SERVER_NAME') }}"> {# HTTP_HOST <- Local #}
     <p><a href="{{path('home')}}" class="btn btn-dark ml-5 mt-2"><i class="fas fa-arrow-circle-left"></i> Retour</a></p>
     
-    <div class="row col-12 col-md-11 mx-auto">
+    <div class="col-12 col-md-11 mx-auto">   
 
+        <div class="col-12 col-md-4 text-center mx-auto">
         {# Messages flash #}
         {% for message in app.flashes('notice') %}
-            <div class="alert alert-success flash-message mb-2">
+            <div class="alert alert-success flash-message mb-2 mx-auto">
                 {{ message }}
             </div>
         {% endfor %}
@@ -28,7 +29,8 @@
             <div class="alert alert-danger flash-message mb-2">
                 {{ message }}
             </div>
-        {% endfor %}   
+        {% endfor %} 
+        </div>  
 
         <div class="col-12 col-md-10 mx-auto">
 
@@ -99,9 +101,9 @@
                                                 {% if candidateInformation.visibilityChoice == 0 %}
                                                     prénom et nom
                                                 {% elseif candidateInformation.visibilityChoice == 2 %}
-                                                    prénom uniquement
+                                                    prénom
                                                 {% else %}
-                                                    nom uniquement
+                                                    nom
                                                 {% endif %}
                                         </td>
                                     </tr>
@@ -125,7 +127,7 @@
                                     {% for webSite in webSites %}
                                   
                                     <tr>
-                                        <td>  <a href="{{webSite.link}}">{{webSite.name}}</a>
+                                        <td><a href="{{webSite.link}}">{{webSite.name}}</a>
                                             <a href= "{{ path("website_edit", {"id": webSite.id }) }}">
                                                 <button class="btn btn-light btn-sm" id="" type="button"> <i class="fas fa-edit"></i></button>
                                             </a>
@@ -361,14 +363,20 @@
                                             </tr>
                                             <tr class ="d-flex justify-content-center">{# Date obtention diplôme OU formation toujours en cours #}
                                                 <th scope="row" class ="d-flex col-4">Date d'obtention du diplôme
-                                                </th>                                          
-                                                {% if formationInfo.status == 0 %}
-                                                <td class ="d-flex col-7">{{ formationInfo.obtainedAt|date("m/d/Y")}}</td>
-                                                {% elseif formationInfo.status == 1 %}
-                                                <td class ="d-flex col-7">en cours</td>
-                                                {% elseif formationInfo.status == 2 %}
-                                                <td class ="d-flex col-7">en cours et en recherche d'alternance</td>
-                                                {% endif %}
+                                                </th>
+                                                <td class ="d-flex col-7">                                          
+                                                    {% if formationInfo.status == 0 %}
+                                                        {% if formationInfo.obtainedAt is empty %}
+                                                            en cours
+                                                        {% else %}
+                                                            {{ formationInfo.obtainedAt|date("d/m/Y")}}
+                                                        {% endif %}
+                                                    {% elseif formationInfo.status == 1 %}
+                                                        en cours
+                                                    {% elseif formationInfo.status == 2 %}
+                                                    en cours et en recherche d'alternance
+                                                    {% endif %}
+                                                </td>
                                             </tr>
                                         </tbody>
                                     </table>
